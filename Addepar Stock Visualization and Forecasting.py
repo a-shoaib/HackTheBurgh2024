@@ -113,7 +113,7 @@ monthly_data['GDP_Growth'] = 0.0
 # Country Name
 countries = ticker_to_country.values()
 
-# Populate the dictionary with the data from gdp_data DataFrame
+# Populating the dictionary with the data from gdp_data DataFrame
 for country in countries:
     if country not in gdp_dict and not country in ['Eurozone', 'Global']:
         gdp_dict[country] = {}
@@ -160,7 +160,7 @@ european_union_gdp_growth = {
 }
 
 
-# Loop over monthly_data to add the GDP growth rate
+# Looping over monthly_data to add the GDP growth rate
 for index, row in monthly_data.iterrows():
     # Get year and country from each row
     year = row['Date'].year
@@ -187,7 +187,7 @@ monthly_data
 # In[12]:
 
 
-# Install TensorFlow using pip in the current Jupyter kernel
+
 import sys
 get_ipython().system('{sys.executable} -m pip install tensorflow')
 
@@ -213,7 +213,7 @@ from sklearn.metrics import mean_squared_error
 
 monthly_data.replace([np.inf, -np.inf], np.nan, inplace=True)
 
-# Drop rows with NaN values (or you can choose to fill them with some value)
+# Dropping rows with NaN values 
 monthly_data.dropna(inplace=True)
 
 scaler = MinMaxScaler(feature_range=(0,1))
@@ -263,7 +263,7 @@ model.compile(optimizer = 'adam', loss = 'mean_squared_error')
 model.fit(X_train, y_train, epochs=100, batch_size=32, validation_split=0.1)
 
 
-# Evaluate the model
+# Model Evaluation
 y_pred = model.predict(X_test)
 
 dummy_features = np.zeros((y_pred.shape[0], scaled_features.shape[1] - y_pred.shape[1]))
@@ -275,7 +275,7 @@ y_pred_rescaled = scaler.inverse_transform(y_pred_full)
 # Extract only the columns that were predicted (e.g., first 2 columns for close_change and volume_change)
 y_pred_rescaled = y_pred_rescaled[:, :y_pred.shape[1]]
 
-# Calculate performance metrics, such as MSE
+# Calculating MSE
 mse = mean_squared_error(y_test, y_pred_rescaled)
 print(f"Mean Squared Error: {mse}")
         
@@ -296,7 +296,7 @@ scaled_features_with_ticker = np.concatenate(
     axis=1
 )
 
-# Then convert it back to a DataFrame if you need to
+
 scaled_features_with_ticker_df = pd.DataFrame(
     scaled_features_with_ticker, 
     columns=['Ticker'] + numeric_columns
@@ -354,13 +354,13 @@ def generate_recommendations(predictions):
     return recommendations
 
 n_steps = 8
-# Assuming `X` is your feature matrix and `n_steps` is the number of time steps used for sequences
+# `X` is the feature matrix and `n_steps` is the number of time steps used for sequences
 last_sequences = get_last_sequences(scaled_features_with_ticker_df, n_steps)
 
-# Get predictions for the next step for each index
+# Predictions for the next step for each index
 next_step_predictions = predict_next_step(model, last_sequences)
 
-# Generate recommendations for each index
+# Recommendations for each index
 final_recommendations = generate_recommendations(next_step_predictions)
 
 # Print or save the recommendations
